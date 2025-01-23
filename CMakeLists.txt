@@ -5,7 +5,9 @@ set(GLFW_BUILD_WAYLAND OFF)
 # libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libgl-dev
 set(GLFW_BUILD_X11 ON)
 
-add_subdirectory(subprojects/glfw)
+add_subdirectory(subprojects)
 
 add_executable(main main.cpp)
+
+target_link_libraries(main glad)
 target_link_libraries(main glfw)
