@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <shaders/basic_vertex.generated.hpp>
 
 static void onFrameBufferSizeCallback(
     GLFWwindow *window,
@@ -40,6 +41,7 @@ int main(int, char **)
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
+        glfwTerminate();
         return EXIT_FAILURE;
     }
 
@@ -56,6 +58,20 @@ int main(int, char **)
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    unsigned int vertexShader;
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &basic_vertex, nullptr);
+    glCompileShader(vertexShader);
+
+    int success;
+    char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(vertexShader, sizeof(infoLog), nullptr, infoLog);
+        infoLog[sizeof(infoLog) - 1] = 0;
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED" << infoLog << std::endl;
+    }
 
     while (!glfwWindowShouldClose(window))
     {
