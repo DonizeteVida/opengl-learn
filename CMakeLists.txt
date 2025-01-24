@@ -9,9 +9,11 @@ elseif (UNIX)
     set(GLFW_BUILD_X11 ON)
 endif()
 
+add_subdirectory(shaders)
 add_subdirectory(subprojects)
 
 add_executable(main main.cpp)
 
+target_link_libraries(main shaders)
 target_link_libraries(main glad)
 target_link_libraries(main glfw)
