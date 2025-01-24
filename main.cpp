@@ -86,6 +86,16 @@ int main(int, char **)
     glCompileShader(fragmentShaderId);
     verifyShaderCompilationStatus(fragmentShaderId);
 
+    unsigned int shaderProgramId;
+    shaderProgramId = glCreateProgram();
+    glAttachShader(shaderProgramId, vertexShaderId);
+    glAttachShader(shaderProgramId, fragmentShaderId);
+    glLinkProgram(shaderProgramId);
+    glUseProgram(shaderProgramId);
+
+    glDeleteShader(vertexShaderId);
+    glDeleteShader(fragmentShaderId);
+
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(.2f, .3f, .3f, 1.0f);
