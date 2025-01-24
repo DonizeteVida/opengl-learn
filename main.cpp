@@ -1,8 +1,11 @@
 #include <iostream>
+#include <functional>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <shaders/basic_vertex.generated.hpp>
+#include <shaders/basic_fragment.generated.hpp>
 
 static void onFrameBufferSizeCallback(
     GLFWwindow *window,
@@ -59,19 +62,29 @@ int main(int, char **)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &basic_vertex, nullptr);
-    glCompileShader(vertexShader);
+    std::function<void(int)> verifyShaderCompilationStatus = [](unsigned int id)
+    {
+        int status;
+        glGetShaderiv(id, GL_COMPILE_STATUS, &status);
+        if (!status)
+        {
+            char infoLog[512] = { 0 };
+            glGetShaderInfoLog(id, sizeof(infoLog), nullptr, infoLog);
+            std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED" << infoLog << std::endl;
+        }
+    };
 
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, sizeof(infoLog), nullptr, infoLog);
-        infoLog[sizeof(infoLog) - 1] = 0;
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED" << infoLog << std::endl;
-    }
+    unsigned int vertexShaderId;
+    vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShaderId, 1, &basic_vertex, nullptr);
+    glCompileShader(vertexShaderId);
+    verifyShaderCompilationStatus(vertexShaderId);
+
+    unsigned int fragmentShaderId;
+    fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShaderId, 1, &basic_fragment, nullptr);
+    glCompileShader(fragmentShaderId);
+    verifyShaderCompilationStatus(fragmentShaderId);
 
     while (!glfwWindowShouldClose(window))
     {
