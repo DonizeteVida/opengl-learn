@@ -57,11 +57,6 @@ int main(int, char **)
         0.0f, 0.5f, 0.0f
     };
 
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
     std::function<void(int)> verifyShaderCompilationStatus = [](unsigned int id)
     {
         int status;
@@ -96,10 +91,24 @@ int main(int, char **)
     glDeleteShader(vertexShaderId);
     glDeleteShader(fragmentShaderId);
 
+    unsigned int vertexBufferObjectId;
+    glGenBuffers(1, &vertexBufferObjectId);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjectId);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    unsigned int vertexArrayObjectId;
+    glGenVertexArrays(1, &vertexArrayObjectId);
+    glBindVertexArray(vertexArrayObjectId);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(.2f, .3f, .3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwPollEvents();
         glfwSwapBuffers(window);
