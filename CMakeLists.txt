@@ -11,8 +11,8 @@ endif()
 
 add_subdirectory(subprojects)
 
-add_executable(main main.cpp)
+link_libraries(glad glfw shaders)
 
-target_link_libraries(main glad)
-target_link_libraries(main glfw)
-target_link_libraries(main shaders)
+add_subdirectory(src)
+
+add_executable(main main.cpp)
