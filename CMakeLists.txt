@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.5.0...3.31.5)
 project(opengl-learn VERSION 0.1.0 LANGUAGES C CXX)
 
 if (APPLE)
+    set(CMAKE_CXX_STANDARD 17)
 
 elseif (UNIX)
     set(GLFW_BUILD_WAYLAND OFF)
