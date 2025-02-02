@@ -1,1 +1,2 @@
 add_executable(overlap_circle overlap.cpp)
+add_executable(optimized_circle optimized.cpp)
