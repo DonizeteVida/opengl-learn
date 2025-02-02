@@ -1,1 +1,1 @@
-add_executable(circle main.cpp)
+add_executable(overlap_circle overlap.cpp)
